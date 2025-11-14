@@ -1,0 +1,69 @@
+# ========== Unity Generated Files ==========
+Temp/
+Library/
+Logs/
+MemoryCaptures/
+UserSettings/
+Obj/
+Build/
+Builds/
+DerivedData/
+Artifacts/
+
+# Cache (newer Unity versions place these here)
+Cache/
+.caches/
+
+# ========== IDE / Editor ==========
+# VS Code
+.vscode/
+# JetBrains Rider / IntelliJ
+.idea/
+
+# Visual Studio
+.vs/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+
+# ========== OS-specific ==========
+# macOS
+.DS_Store
+*.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Linux / misc
+*~
+
+# ========== Auto-Generated Unity Files ==========
+# TextMeshPro auto-generated assets
+[Tt]ext[Mm]esh[Pp]ro/*/*.asset
+
+# Plug-ins & Packages cache
+Packages/*/package-cache/
+ProjectSettings/VersionControlSettings.asset
+
+# ========== Optional (Safe to Ignore or Keep) ==========
+# Ignore addressables build output
+AddressableAssetsData/*/Build*
+AddressableAssetsData/*/catalog.json
+
+# Ignore builds but keep platform-specific build folders if you want
+# Build/Windows/
+# Build/WebGL/
+
+# ========== keep meta files! ==========
+# DO NOT IGNORE *.meta — Unity requires these for collaboration
+!*.meta
+
+# Keep Scenes, Prefabs, Materials, Animations, etc.
+# (By default everything not listed above remains included)

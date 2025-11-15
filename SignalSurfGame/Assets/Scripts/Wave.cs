@@ -12,6 +12,8 @@ public class Wave
 {
     public bool Complete { get; private set; } = false;
 
+    private static readonly int CanvasHeight = 1080;
+    private static readonly float CanvasMargin = 100;
     private static readonly Dictionary<Difficulty, int> _difficultyToBeatsPerPoint = new()
     {
         { Difficulty.Easy, 12 },
@@ -50,7 +52,8 @@ public class Wave
         for(int i = 0; i < audioSamples.Length; i += sampleStep)
         {
             float y = audioSamples[i] * amplitudeScale;
-            _coordinates.Enqueue(y);
+            float normalizedY = Mathf.Lerp(CanvasMargin, CanvasHeight - CanvasMargin, (y + 1f) / 2f);
+            _coordinates.Enqueue(normalizedY);
         }
     }
 

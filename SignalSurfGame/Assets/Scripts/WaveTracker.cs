@@ -8,7 +8,7 @@ public class WaveTracker : MonoBehaviour
     private Wave _currentWave;
 
     private float _timer = 0f;
-    private float _logInterval = 0.5f; // seconds
+    private float _logInterval = 0.5f;
 
     void Start()
     {

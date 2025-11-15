@@ -10,11 +10,13 @@ public enum Difficulty
 
 public class Wave
 {
-    private static readonly Dictionary<Difficulty, int> _difficultyToSampleStep = new()
+    public bool Complete { get; private set; } = false;
+
+    private static readonly Dictionary<Difficulty, int> _difficultyToBeatsPerPoint = new()
     {
-        { Difficulty.Easy, 2048 },
-        { Difficulty.Medium, 1024 },
-        { Difficulty.Hard, 512 }
+        { Difficulty.Easy, 12 },
+        { Difficulty.Medium, 8 },
+        { Difficulty.Hard, 4 }
     };
     private static readonly Dictionary<Difficulty, float> _difficultyToAmplitudeScale = new()
     {
@@ -24,7 +26,7 @@ public class Wave
     };
     private Queue<float> _coordinates;
 
-    public Wave(AudioClip songClip, Difficulty difficulty)
+    public Wave(AudioClip songClip, float songBPM, Difficulty difficulty)
     {
         if(songClip == null)
         {
@@ -33,13 +35,18 @@ public class Wave
         }
 
         _coordinates = new();
+        Complete = false;
 
         float[] audioSamples = new float[songClip.samples * songClip.channels];
         songClip.GetData(audioSamples, 0);
 
-        int sampleStep = _difficultyToSampleStep[difficulty];
         float amplitudeScale = _difficultyToAmplitudeScale[difficulty];
 
+        int beatsPerPoint = _difficultyToBeatsPerPoint[difficulty];
+        float secondsPerBeat = 60f / songBPM;
+        int samplesPerBeat = Mathf.RoundToInt(secondsPerBeat * songClip.frequency);
+        int sampleStep = samplesPerBeat * beatsPerPoint;
+         
         for(int i = 0; i < audioSamples.Length; i += sampleStep)
         {
             float y = audioSamples[i] * amplitudeScale;
@@ -51,6 +58,7 @@ public class Wave
     {
         if(_coordinates.Count == 0)
         {
+            Complete = true;
             return 0;
         }
 

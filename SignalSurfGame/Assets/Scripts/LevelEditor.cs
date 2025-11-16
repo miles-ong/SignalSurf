@@ -22,6 +22,8 @@ public class LevelEditor : MonoBehaviour
     private Level _level;
     private EditorMode _mode;
 
+    private WavePointBehaviour _movingPoint;
+
     void Start()
     {
         _contentRect = levelEditorUIContent.GetComponent<RectTransform>();
@@ -33,7 +35,7 @@ public class LevelEditor : MonoBehaviour
     {
         if(_level != null && IsMouseInsideViewport())
         {
-            if(_mode == EditorMode.Place && Mouse.current.leftButton.wasPressedThisFrame)
+            if (_mode == EditorMode.Place && Mouse.current.leftButton.wasPressedThisFrame)
             {
                 Vector2 localPos = GetLocalPositionFromMouse();
                 Debug.Log($"Local Pos: {localPos}");
@@ -41,6 +43,10 @@ public class LevelEditor : MonoBehaviour
                 Debug.Log($"Snapped Pos: {snappedPos}");
                 PlacePoint(snappedPos);
             }
+            
+            if (Keyboard.current.digit1Key.wasPressedThisFrame) _mode = EditorMode.Place;
+            else if (Keyboard.current.digit2Key.wasPressedThisFrame) _mode = EditorMode.Move;
+            else if (Keyboard.current.digit3Key.wasPressedThisFrame) _mode = EditorMode.Delete;
         }
     }
 
@@ -53,22 +59,38 @@ public class LevelEditor : MonoBehaviour
 
     public void OnPointClicked(WavePointBehaviour pointBehaviour)
     {
-
+        if(_mode == EditorMode.Delete)
+        {
+            DeletePoint(pointBehaviour);
+        }
     }
 
     public void OnPointDragStart(WavePointBehaviour pointBehaviour)
     {
-
+        if(_mode == EditorMode.Move)
+        {
+            _movingPoint = pointBehaviour;
+        }
     }
     
     public void OnPointDrag(Vector2 screenPos)
     {
-
+        if(_mode == EditorMode.Move && _movingPoint != null)
+        {
+            Vector2 localPos = GetLocalPositionFromMouse();
+            Vector2 snappedPos = GetSnappedPosition(localPos);
+            _movingPoint.transform.localPosition = snappedPos;
+        }
     }
     
     public void OnPointDragEnd()
     {
-
+        if(_mode == EditorMode.Move && _movingPoint != null)
+        {
+            Vector2 localPos = GetLocalPositionFromMouse();
+            MovePoint(_movingPoint, localPos);
+            _movingPoint = null;
+        }
     }
 
     private void SaveLevel()
@@ -91,7 +113,7 @@ public class LevelEditor : MonoBehaviour
 
     private void PlacePoint(Vector2 position)
     {
-        int beatIndex = GetBeatIndex(position.x);
+        int beatIndex = GetBeatIndexFromCoordinate(position.x);
 
         if (_level.Wave.GetPoint(beatIndex) != null)
         {
@@ -109,14 +131,29 @@ public class LevelEditor : MonoBehaviour
         _level.Wave.AddPoint(beatIndex, point);
     }
 
-    private void MovePoint(WavePointBehaviour pointBehaviour, Vector2 canvasPos)
+    private void MovePoint(WavePointBehaviour pointBehaviour, Vector2 contentPos)
     {
+        Wave wave = _level.Wave;
+        WavePoint point = pointBehaviour.Data;
+        WavePoint pointAtBeatIndex = wave.GetPoint(GetBeatIndexFromCoordinate(contentPos.x));
 
+        if (pointAtBeatIndex != null && pointAtBeatIndex != point)
+        {
+            Vector2 previousPos = new Vector2(GetCoordinateFromBeatIndex(point.BeatIndex), point.YCoordinate);
+            pointBehaviour.transform.localPosition = previousPos;
+            return;
+        }
+
+        Vector2 snappedPos = GetSnappedPosition(contentPos);
+        pointBehaviour.transform.localPosition = snappedPos;
+        point.BeatIndex = GetBeatIndexFromCoordinate(snappedPos.x);
+        point.YCoordinate = snappedPos.y;
     }
 
     private void DeletePoint(WavePointBehaviour pointBehaviour)
     {
-
+        _level.Wave.RemovePoint(pointBehaviour.Data);
+        Destroy(pointBehaviour.gameObject);
     }
 
     private Vector2 GetSnappedPosition(Vector2 position)
@@ -145,9 +182,14 @@ public class LevelEditor : MonoBehaviour
         return Vector2.zero;
     }
 
-    private int GetBeatIndex(float x)
+    private int GetBeatIndexFromCoordinate(float x)
     {
         return Mathf.RoundToInt(x / gridCellSize);
+    }
+
+    private int GetCoordinateFromBeatIndex(int beatIndex)
+    {
+        return beatIndex * gridCellSize;
     }
     
     private bool IsMouseInsideViewport()

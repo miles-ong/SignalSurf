@@ -18,6 +18,12 @@ public class Wave
     {
         Points.Remove(beatIndex);
     }
+
+    public void RemovePoint(WavePoint point)
+    {
+        int beatIndex = point.BeatIndex;
+        Points.Remove(beatIndex);
+    }
     
     public WavePoint GetPoint(int beatIndex)
     {

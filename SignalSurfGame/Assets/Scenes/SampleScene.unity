@@ -149,10 +149,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 228177023}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1500, y: 0}
-  m_SizeDelta: {x: 3000, y: 100}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1000, y: 100}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!1 &196960780
 GameObject:
@@ -660,7 +660,7 @@ GameObject:
   - component: {fileID: 553892748}
   - component: {fileID: 553892747}
   m_Layer: 5
-  m_Name: TimelineScrollBar
+  m_Name: TimelineScrollbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -729,8 +729,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 977421906}
   m_HandleRect: {fileID: 977421905}
   m_Direction: 0
-  m_Value: 0.5
-  m_Size: 0.56666666
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -908,7 +908,7 @@ GameObject:
   - component: {fileID: 1083443407}
   - component: {fileID: 1083443408}
   m_Layer: 5
-  m_Name: TimelineScrollRect
+  m_Name: EditorScroller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -944,27 +944,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1083443406}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+  m_Script: {fileID: 11500000, guid: d40669d81aff375489bcb97f56a72bbd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ScrollRect
-  m_Content: {fileID: 38222353}
-  m_Horizontal: 1
-  m_Vertical: 0
-  m_MovementType: 1
-  m_Elasticity: 0.1
-  m_Inertia: 1
-  m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
-  m_Viewport: {fileID: 228177023}
-  m_HorizontalScrollbar: {fileID: 553892747}
-  m_VerticalScrollbar: {fileID: 0}
-  m_HorizontalScrollbarVisibility: 0
-  m_VerticalScrollbarVisibility: 0
-  m_HorizontalScrollbarSpacing: 0
-  m_VerticalScrollbarSpacing: 0
-  m_OnValueChanged:
-    m_PersistentCalls:
-      m_Calls: []
+  m_EditorClassIdentifier: Assembly-CSharp::EditorScroller
+  Viewport: {fileID: 228177023}
+  Content: {fileID: 38222353}
+  scrollbar: {fileID: 553892747}
 --- !u!1 &1099060729
 GameObject:
   m_ObjectHideFlags: 0
@@ -1012,7 +997,7 @@ GameObject:
   - component: {fileID: 1429487982}
   - component: {fileID: 1429487981}
   m_Layer: 0
-  m_Name: LevelBuilder
+  m_Name: LevelEditor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1030,7 +1015,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 254d780a794c3c64fb3635170b676d96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelBuilder
-  canvas: {fileID: 236231173}
+  levelEditorScroller: {fileID: 1083443408}
+  levelEditorUIContent: {fileID: 38222352}
   gridCellSize: 64
   wavePointPrefab: {fileID: 5673167584973266916, guid: 719c659f47029084aa3ca43dc7a6455b, type: 3}
   testSong: {fileID: 11400000, guid: c4111f42b34d74243acb68239b4c1a28, type: 2}

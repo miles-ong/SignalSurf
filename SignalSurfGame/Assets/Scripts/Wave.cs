@@ -24,7 +24,7 @@ public class Wave
         int beatIndex = point.BeatIndex;
         Points.Remove(beatIndex);
     }
-    
+
     public WavePoint GetPoint(int beatIndex)
     {
         if (!Points.ContainsKey(beatIndex))

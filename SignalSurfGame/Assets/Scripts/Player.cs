@@ -15,13 +15,28 @@ public class Player : MonoBehaviour
     [Header("Visual")]
     [SerializeField] private SpriteRenderer spriteRenderer;
 
+    [Header("Health")]
+    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float invulnerabilityTime = 0.1f; // Prevent damage spam
+
+    [Header("Score")]
+    [SerializeField] private float scorePerSecond = 10f; // Points gained per second when aligned
+
     // Movement state
-    private float verticalVelocity = 0f;
+    private float verticalVelocity { get; set; } = 0f;
     private float moveInput = 0f;
 
-    // Public properties
-    public Vector3 Position => transform.position;
-    public float Velocity => verticalVelocity;
+    // Health state
+    private float currentHealth;
+    private float lastDamageTime = -999f;
+
+    // Score state
+    private float currentScore = 0f;
+
+    public float CurrentHealth => currentHealth;
+    public float MaxHealth => maxHealth;
+    public bool IsAlive => currentHealth > 0f;
+    public float CurrentScore => currentScore;
 
     void Start()
     {
@@ -30,6 +45,9 @@ public class Player : MonoBehaviour
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
+
+        // Initialize health
+        currentHealth = maxHealth;
     }
 
     void Update()
@@ -82,5 +100,38 @@ public class Player : MonoBehaviour
         leftPoint = new Vector3(transform.position.x - 1f, maxY, 0f);
         rightPoint = new Vector3(transform.position.x + 1f, maxY, 0f);
         Gizmos.DrawLine(leftPoint, rightPoint);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        if (!IsAlive)
+            return;
+
+        // Check invulnerability timer
+        if (Time.time - lastDamageTime < invulnerabilityTime)
+            return;
+
+        currentHealth -= damage;
+        lastDamageTime = Time.time;
+
+        if (currentHealth <= 0f)
+        {
+            currentHealth = 0f;
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Debug.Log("Player died!");
+        // TODO: Trigger game over
+    }
+
+    public void AddScore(float points)
+    {
+        if (!IsAlive)
+            return;
+
+        currentScore += points;
     }
 }
